@@ -43,5 +43,8 @@ class Blok():
         self.arr = temp
 
 
-    def get_piece(self):
+    def get_piece(self) -> list:
         return self.arr
+
+    def get_value(self) -> int:
+        return sum(map(sum, self.arr))
