@@ -32,7 +32,7 @@ class Blok():
 
 
     def flip(self):
-        temp = self.arr
+        temp = [[0 for x in range(len(self.arr[0]))] for y in range(len(self.arr))]
 
         for y in range(len(self.arr)):
             for x in range(len(self.arr[0])):

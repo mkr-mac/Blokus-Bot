@@ -42,11 +42,11 @@ class Board():
                     return False
 
                 # Check adjacent to see if a tile from same user exists
-                if not self.check_sides(y, x, p_id, b_y, b_x):
+                elif not self.check_sides(y, x, p_id, b_y, b_x):
                     return False
 
                 # Do diagonal checks
-                if not diagonal_check:
+                elif not diagonal_check:
                     diagonal_check = self.check_diagonals(y, x, p_id, b_y, b_x)
 
 
@@ -97,8 +97,7 @@ class Board():
                 for b_x in range(blok.size_x):
                     if blok[b_y][b_x]:
                         self.state[y+b_y][x+b_x] = p_id
-
-            print(f"Placed! {blok.arr, y, x, p_id}")
+            
             return True
 
         else:

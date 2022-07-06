@@ -16,7 +16,6 @@ class AI(Player):
         if len(valid_moves):
             rand_blok, rand_y, rand_x, blok_iter = choice(valid_moves)
             if board.set_blok(rand_blok, rand_y, rand_x, self.id):
-                print (blok_iter)
                 self.remove_from_hand(blok_iter)
                 
         else:
@@ -24,6 +23,8 @@ class AI(Player):
             self.tally_score()
             print(f"Final Score: {self.score}")
             self.has_valid_moves = False
+            for p in self.hand:
+                print(p.arr)
             return
         
 
@@ -41,7 +42,7 @@ class AI(Player):
                             if (board.check_valid_move(copy(self.hand[blok_iter]), y, x, self.id)):
                                 valid.append([copy(self.hand[blok_iter]), y, x, blok_iter])
 
-                            self.hand[blok_iter].rotate_counterclockwise()
+                            self.hand[blok_iter].rotate_clockwise()
                         self.hand[blok_iter].flip()
 
         return valid
