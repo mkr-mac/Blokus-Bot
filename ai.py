@@ -58,7 +58,7 @@ class AI(Player):
 
 class BigFirstAI(AI):
 
-    def decide_action(self, board):
+    def decide_action(self, board, depth=0, player=0, playerhands=False):
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
