@@ -60,13 +60,13 @@ class Board():
         if x+b_x > 0 and y+b_y > 0:
             if self.state[y+b_y-1][x+b_x-1] == p_id:
                 return True
-        elif y+b_y+1 < self.size and x+b_x > 0:
+        if y+b_y+1 < self.size and x+b_x > 0:
             if self.state[y+b_y+1][x+b_x-1] == p_id:
                 return True
-        elif x+b_x+1 < self.size and y+b_y > 0:
+        if x+b_x+1 < self.size and y+b_y > 0:
             if self.state[y+b_y-1][x+b_x+1] == p_id:
                 return True
-        elif y+b_y+1 < self.size and x+b_x+1 < self.size:
+        if y+b_y+1 < self.size and x+b_x+1 < self.size:
             if self.state[y+b_y+1][x+b_x+1] == p_id:
                 return True
 
@@ -76,14 +76,14 @@ class Board():
         if y+b_y > 0:
             if self.state[y+b_y-1][x+b_x] == p_id:
                 return False
-        elif x+b_x > 0:
+        if x+b_x > 0:
             if self.state[y+b_y][x+b_x-1] == p_id:
                 return False
         # Out of bounds checks
-        elif y+b_y+1 < self.size:
+        if y+b_y+1 < self.size:
             if self.state[y+b_y+1][x+b_x] == p_id:
                 return False
-        elif x+b_x+1 < self.size:
+        if x+b_x+1 < self.size:
             if self.state[y+b_y][x+b_x+1] == p_id:
                 return False
         
