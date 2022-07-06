@@ -15,7 +15,18 @@ class Player():
         self.score = 0
 
         for p in self.hand:
-            self.score += sum(map(sum, p))
+            self.score += p.get_value()
 
     def remove_from_hand(self, p_id):
         del self.hand[p_id]
+
+    def final_score(self):
+        print(f"Player {self.id} is out of moves!")
+        self.tally_score()
+        print(f"Final Score: {self.score}")
+        self.has_valid_moves = False
+        for p in self.hand:
+            for row in p.arr:
+                print(row)
+            print("--------------")
+        return
