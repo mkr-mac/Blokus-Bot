@@ -94,7 +94,7 @@ class Board():
         return False
 
     # Set a tile on the board
-    def set_blok(self, blok, y, x, p_id) -> Boolean:
+    def set_blok(self, blok, y, x, p_id):
         # Check if move is valid
         if self.check_valid_move(blok, y, x, p_id):
             # Set each tile with the player id
@@ -103,7 +103,7 @@ class Board():
                     if blok[b_y][b_x]:
                         self.state[y+b_y][x+b_x] = p_id
             
-            return True
+            return self
 
         else:
             print(f"ERROR: Failed Placement! {y, x, p_id}")

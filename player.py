@@ -17,8 +17,8 @@ class Player():
         for p in self.hand:
             self.score += p.get_value()
 
-    def remove_from_hand(self, p_id):
-        del self.hand[p_id]
+    def remove_from_hand(self, bl_iter):
+        del self.hand[bl_iter]
 
     def final_score(self):
         print(f"Player {self.id} is out of moves!")

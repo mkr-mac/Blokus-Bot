@@ -1,5 +1,5 @@
 
-from ai import AI, BigFirstAI
+from ai import AI, BigFirstAI, RecursiveAI
 from board import Board
 
 
@@ -7,7 +7,7 @@ def blokus():
 
     main_board = Board()
     players = []
-    players.append(AI(1))
+    players.append(RecursiveAI(1))
     players.append(AI(2))
     players.append(AI(3))
     players.append(BigFirstAI(4))
@@ -24,7 +24,10 @@ def blokus():
 
         for p in players:
             if p.has_valid_moves:
-                p.decide_action(main_board)
+                phands = []
+                for h in players:
+                    phands.append(h.hand)
+                p.decide_action(main_board, playerhands=phands)
                 moves_left = True
 
     print("Final Board:")
