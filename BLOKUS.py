@@ -6,7 +6,7 @@ from board import Board
 def blokus():
 
     main_board = Board()
-    players = [AI(p) for p in range(4)]
+    players = [AI(p+1) for p in range(4)]
 
     moves_left = True
 
@@ -17,7 +17,8 @@ def blokus():
                 p.decide_action(main_board)
                 moves_left = True
 
-    print(main_board)    
+    for l in main_board:
+        print(l)
 
 
 

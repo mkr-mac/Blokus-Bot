@@ -12,7 +12,7 @@ class Blok():
 
         for y in range(len(self.arr)):
             for x in range(len(self.arr[0])):
-                temp[x][len(self.arr) - y] = self.arr[y][x]
+                temp[x][len(self.arr) - y - 1] = self.arr[y][x]
 
         self.arr = temp
         self.size_y = len(self.arr)
@@ -36,7 +36,7 @@ class Blok():
 
         for y in range(len(self.arr)):
             for x in range(len(self.arr[0])):
-                temp[y][len(self.arr[0]) - x] = self.arr[y][x]
+                temp[y][len(self.arr[0]) - x - 1] = self.arr[y][x]
                 
         self.arr = temp
 
