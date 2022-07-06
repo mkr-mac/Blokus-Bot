@@ -144,7 +144,7 @@ class RecursiveAI(AI):
                 
         # No pieces left? Show score, set as finished.
         elif not p_id == self.id:
-            return self.decide_action(board, depth+1, ((p_id)%4)+1)
+            return self.decide_action(board, depth+1, ((p_id)%4)+1, ph_copy)
         elif depth > 0:
             self.tally_score()
             return self.score
