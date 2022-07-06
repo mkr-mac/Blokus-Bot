@@ -6,7 +6,7 @@ class Board():
         self.size = size
         self.state = [[0 for x in range(self.size)] for y in range(self.size)]
 
-        
+    # Lets Board act like a list
     def __getitem__(self, item):
         return self.state[item]
 
@@ -18,6 +18,7 @@ class Board():
         diagonal_check = False
 
         # First Corner Check
+        # It is the only valid place for the first piece
         if (not diagonal_check) and ((
             x==0 and y==0 and p_id==1 and blok[0][0]) or (
                 blok.size_x==self.size-x and y==0 and p_id==2 and blok[0][blok.size_x-1]) or (
@@ -42,20 +43,23 @@ class Board():
                     return False
 
                 # Check adjacent to see if a tile from same user exists
-                elif not self.check_sides(y, x, p_id, b_y, b_x):
+                # Finding one invalidates the tile
+                elif self.check_sides(y, x, p_id, b_y, b_x):
                     return False
 
                 # Do diagonal checks
+                # At least one needs to be found to be considered valid
                 elif not diagonal_check:
                     diagonal_check = self.check_diagonals(y, x, p_id, b_y, b_x)
 
-
+        # Check if a diagonal was found on that tile
         if not diagonal_check:
             return False
 
         # If no checks fail, placement is valid
         return True
 
+    # Checks diagonally from each tile
     def check_diagonals(self, y, x, p_id, b_y, b_x) -> Boolean:
         if x+b_x > 0 and y+b_y > 0:
             if self.state[y+b_y-1][x+b_x-1] == p_id:
@@ -72,27 +76,28 @@ class Board():
 
         return False
 
+    # Checks to see if there is an adjecent tile
     def check_sides(self, y, x, p_id, b_y, b_x) -> Boolean:
         if y+b_y > 0:
             if self.state[y+b_y-1][x+b_x] == p_id:
-                return False
+                return True
         if x+b_x > 0:
             if self.state[y+b_y][x+b_x-1] == p_id:
-                return False
-        # Out of bounds checks
+                return True
         if y+b_y+1 < self.size:
             if self.state[y+b_y+1][x+b_x] == p_id:
-                return False
+                return True
         if x+b_x+1 < self.size:
             if self.state[y+b_y][x+b_x+1] == p_id:
-                return False
+                return True
         
-        return True
+        return False
 
+    # Set a tile on the board
     def set_blok(self, blok, y, x, p_id) -> Boolean:
-
+        # Check if move is valid
         if self.check_valid_move(blok, y, x, p_id):
-
+            # Set each tile with the player id
             for b_y in range(blok.size_y):
                 for b_x in range(blok.size_x):
                     if blok[b_y][b_x]:

@@ -1,4 +1,6 @@
 from blok import Blok
+
+# Manually define each blok
 def get_standard():
     return [
     Blok(
@@ -100,7 +102,7 @@ def get_standard():
     [[1,0,0],
      [1,1,1],
      [0,1,0]]),
-     
+
     Blok(
     [[0,1,0],
      [1,1,1],

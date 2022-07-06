@@ -4,9 +4,11 @@ class Blok():
         self.size_y = len(arr)
         self.size_x = len(arr[0])
 
+    # Lets Blok act like a list
     def __getitem__(self, item):
         return self.arr[item]
 
+    # Rotates the tile clockwise
     def rotate_clockwise(self):
         temp = [[0 for x in range(len(self.arr))] for y in range(len(self.arr[0]))]
 
@@ -18,7 +20,7 @@ class Blok():
         self.size_y = len(self.arr)
         self.size_x = len(self.arr[0])
                 
-
+    # Rotates the tile counterclockwise
     def rotate_counterclockwise(self):
         temp = [[0 for x in range(len(self.arr))] for y in range(len(self.arr[0]))]
 
@@ -30,7 +32,7 @@ class Blok():
         self.size_y = len(self.arr)
         self.size_x = len(self.arr[0])
 
-
+    # Flips the tile over
     def flip(self):
         temp = [[0 for x in range(len(self.arr[0]))] for y in range(len(self.arr))]
 

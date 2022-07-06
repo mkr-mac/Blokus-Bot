@@ -9,15 +9,18 @@ class AI(Player):
     def decide_action(self, board):
 
         valid_moves = []
-
+        # Check for valid moves if there are still pieces in hand
         if len(self.hand):
             valid_moves = self.find_valid_moves(board)
 
+        # Pick a random move if there is at least one valid move
         if len(valid_moves):
             rand_blok, rand_y, rand_x, blok_iter = choice(valid_moves)
-            if board.set_blok(rand_blok, rand_y, rand_x, self.id):
+            if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
+                # Remove the piece from the hand
                 self.remove_from_hand(blok_iter)
                 
+        # No pieces left? Show score, set as finished.
         else:
             print(f"Player {self.id} is out of moves!")
             self.tally_score()
@@ -27,13 +30,13 @@ class AI(Player):
                 print(p.arr)
             return
         
-
+        # Refresh score after turn
         self.tally_score()
 
     def find_valid_moves(self, board) -> list:
 
         valid = []
-
+        # Check each space with each tile with every orientation
         for y in range(board.size):
             for x in range(board.size):
                 for blok_iter in range(len(self.hand)-1):
