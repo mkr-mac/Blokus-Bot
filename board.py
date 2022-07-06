@@ -20,9 +20,9 @@ class Board():
         # First Corner Check
         if (not diagonal_check) and ((
             x==0 and y==0 and p_id==1 and blok[0][0]) or (
-                x==self.size-1 and y==0 and p_id==2 and blok[0][blok.size_x-1]) or (
-                    x==0 and y==self.size-1 and p_id==3 and blok[blok.size_y-1][0]) or (
-                        x==self.size-1 and y==self.size-1 and p_id==4 and blok[blok.size_y-1][blok.size_x-1])
+                blok.size_x==self.size-x and y==0 and p_id==2 and blok[0][blok.size_x-1]) or (
+                    x==0 and blok.size_y==self.size-y and p_id==3 and blok[blok.size_y-1][0]) or (
+                        blok.size_x==self.size-x and blok.size_y==self.size-y and p_id==4 and blok[blok.size_y-1][blok.size_x-1])
             ):
             
             diagonal_check = True
@@ -40,35 +40,15 @@ class Board():
                 # Check if spot is taken
                 elif self.state[y+b_y][x+b_x]:
                     return False
+
                 # Check adjacent to see if a tile from same user exists
-                elif y+b_y > 0:
-                    if self.state[y+b_y-1][x+b_x] == p_id:
-                        return False
-                elif x+b_x > 0:
-                    if self.state[y+b_y][x+b_x-1] == p_id:
-                        return False
-                # Out of bounds checks
-                elif y+b_y+1 < self.size:
-                    if self.state[y+b_y+1][x+b_x] == p_id:
-                        return False
-                elif x+b_x+1 < self.size:
-                    if self.state[y+b_y][x+b_x+1] == p_id:
-                        return False
+                if not self.check_sides(y, x, p_id, b_y, b_x):
+                    return False
+
                 # Do diagonal checks
-                elif diagonal_check:
-                    # Already valid, skip checks
-                    pass
-                elif self.state[y+b_y-1][x+b_x-1] == p_id:
-                    diagonal_check = True
-                elif y+b_y+1 < self.size:
-                    if self.state[y+b_y+1][x+b_x-1] == p_id:
-                        diagonal_check = True
-                elif x+b_x+1 < self.size:
-                    if self.state[y+b_y-1][x+b_x+1] == p_id:
-                        diagonal_check = True
-                elif y+b_y+1 < self.size and x+b_x+1 < self.size:
-                    if self.state[y+b_y+1][x+b_x+1] == p_id:
-                        diagonal_check = True
+                if not diagonal_check:
+                    diagonal_check = self.check_diagonals(y, x, p_id, b_y, b_x)
+
 
         if not diagonal_check:
             return False
@@ -76,8 +56,38 @@ class Board():
         # If no checks fail, placement is valid
         return True
 
-    def check_diagonals(self, blok, y, x, p_id):
-        pass
+    def check_diagonals(self, y, x, p_id, b_y, b_x) -> Boolean:
+        if x+b_x > 0 and y+b_y > 0:
+            if self.state[y+b_y-1][x+b_x-1] == p_id:
+                return True
+        elif y+b_y+1 < self.size and x+b_x > 0:
+            if self.state[y+b_y+1][x+b_x-1] == p_id:
+                return True
+        elif x+b_x+1 < self.size and y+b_y > 0:
+            if self.state[y+b_y-1][x+b_x+1] == p_id:
+                return True
+        elif y+b_y+1 < self.size and x+b_x+1 < self.size:
+            if self.state[y+b_y+1][x+b_x+1] == p_id:
+                return True
+
+        return False
+
+    def check_sides(self, y, x, p_id, b_y, b_x) -> Boolean:
+        if y+b_y > 0:
+            if self.state[y+b_y-1][x+b_x] == p_id:
+                return False
+        elif x+b_x > 0:
+            if self.state[y+b_y][x+b_x-1] == p_id:
+                return False
+        # Out of bounds checks
+        elif y+b_y+1 < self.size:
+            if self.state[y+b_y+1][x+b_x] == p_id:
+                return False
+        elif x+b_x+1 < self.size:
+            if self.state[y+b_y][x+b_x+1] == p_id:
+                return False
+        
+        return True
 
     def set_blok(self, blok, y, x, p_id) -> Boolean:
 
