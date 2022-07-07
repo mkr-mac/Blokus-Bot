@@ -28,33 +28,32 @@ class AI(Player):
         self.tally_score()
 
     def find_valid_moves(self, board, override_id=0, override_hand=False) -> list:
-        if override_id:
-            p_id = override_id
-        else:
-            p_id = self.id
+        
+        p_id = override_id if override_id else self.id
 
-        if override_hand:
-            ohand = override_hand
-        else:
-            ohand = self.hand
+        ohand = override_hand if override_hand else self.hand
 
-        valid = []
+        valid_moves = []
         # Check each space with each tile with every orientation
-        for y in range(board.size):
-            for x in range(board.size):
-                for blok_iter in range(len(ohand)-1):
-                    b=ohand[blok_iter]
-                    for flip in range(2 if b.flipable else 1):
-                        for rot in range(b.rotations):
+        blok_iter = -1
+        for b in ohand:
+            blok_iter+=1
+            
+            for flip in range(2 if b.flipable else 1):
+                if b.flipable:
+                    b.flip()
+
+                for rot in range(b.rotations):
+                    if rot:
+                        b.rotate_clockwise()
+
+                    for y in range(board.size + -b.size_y + 1):
+                        for x in range(board.size + -b.size_x + 1):
 
                             if (board.check_valid_move(copy(b), y, x, p_id)):
-                                valid.append([copy(b), y, x, blok_iter])
+                                valid_moves.append([copy(b), y, x, blok_iter])
 
-                            b.rotate_clockwise()
-                        b.flip()
-
-        return valid
-
+        return valid_moves
 
 
 
@@ -100,15 +99,10 @@ class BigFirstAI(AI):
 class RecursiveAI(AI):
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
-        if player:
-            p_id = player
-        else:
-            p_id = self.id
-            
-        if playerhands:
-            ohand = playerhands
-        else:
-            ohand = self.hand
+        
+        p_id = player if player else self.id
+        
+        ohand = playerhands if playerhands else self.hand
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
@@ -172,3 +166,5 @@ class RecursiveAI(AI):
         
         # Refresh score after turn
         self.tally_score()
+
+
