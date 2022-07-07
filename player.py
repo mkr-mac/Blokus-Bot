@@ -17,6 +17,13 @@ class Player():
         for p in self.hand:
             self.score += p.get_value()
 
+    def get_soft_score(self):
+        score = 0
+        for p in self.hand:
+            score += p.size_x*p.size_y
+
+        return score
+
     def remove_from_hand(self, bl_iter):
         del self.hand[bl_iter]
 
