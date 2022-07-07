@@ -7,7 +7,7 @@ def blokus():
 
     main_board = Board()
     players = []
-    players.append(RecursiveAI(1))
+    players.append(AI(1))
     players.append(AI(2))
     players.append(AI(3))
     players.append(BigFirstAI(4))
@@ -18,7 +18,8 @@ def blokus():
 
     while moves_left:
         moves_left = False
-
+        
+        print(f"Turn {turn_counter}!")
         turn_counter+=1
 
         for p in players:

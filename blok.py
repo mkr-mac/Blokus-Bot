@@ -1,8 +1,10 @@
 class Blok():
-    def __init__(self, arr):
+    def __init__(self, arr, flipable = True, rotations = 4):
         self.arr = arr
         self.size_y = len(arr)
         self.size_x = len(arr[0])
+        self.flipable = flipable
+        self.rotations = rotations
 
     # Lets Blok act like a list
     def __getitem__(self, item):

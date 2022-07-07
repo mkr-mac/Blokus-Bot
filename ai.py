@@ -43,14 +43,15 @@ class AI(Player):
         for y in range(board.size):
             for x in range(board.size):
                 for blok_iter in range(len(ohand)-1):
-                    for flip in range(2):
-                        for rot in range(4):
+                    b=ohand[blok_iter]
+                    for flip in range(2 if b.flipable else 1):
+                        for rot in range(b.rotations):
 
-                            if (board.check_valid_move(copy(ohand[blok_iter]), y, x, p_id)):
-                                valid.append([copy(ohand[blok_iter]), y, x, blok_iter])
+                            if (board.check_valid_move(copy(b), y, x, p_id)):
+                                valid.append([copy(b), y, x, blok_iter])
 
-                            ohand[blok_iter].rotate_clockwise()
-                        ohand[blok_iter].flip()
+                            b.rotate_clockwise()
+                        b.flip()
 
         return valid
 
@@ -118,6 +119,7 @@ class RecursiveAI(AI):
 
             lowest_score = 999
             best_moves = []
+
             mov_iter = 1
             for move in valid_moves:
                 if p_id == 1 and not depth:
@@ -126,7 +128,7 @@ class RecursiveAI(AI):
 
                 score = 0
 
-                bd_copy=copy(board)
+                bd_copy=deepcopy(board)
                 # whywhywhywhywhywhy
                 ph_copy=deepcopy(ohand)
 
@@ -151,7 +153,6 @@ class RecursiveAI(AI):
 
             if not depth:
                 rand_blok, rand_y, rand_x, blok_iter = choice(best_moves)
-                print("doot")
                 if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
                     # Remove the piece from the hand
                     self.remove_from_hand(blok_iter)
