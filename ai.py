@@ -95,6 +95,10 @@ class BigFirstAI(AI):
 
 
 class RecursiveAI(AI):
+    
+    def __init__(self, p_id, turns_to_predict=1):
+        self.turns_to_predict = turns_to_predict
+        super().__init__(p_id)
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
         
@@ -104,7 +108,7 @@ class RecursiveAI(AI):
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
-        if len(ohand[p_id-1]) and depth < 5:
+        if len(ohand[p_id-1]) and depth < self.turns_to_predict:
             valid_moves = self.find_valid_moves(board, p_id, ohand[p_id-1])
 
         if len(valid_moves):
@@ -163,6 +167,10 @@ class RecursiveAI(AI):
 
 
 class SelfOnlyRecursiveAI(AI):
+
+    def __init__(self, p_id, turns_to_predict=1):
+        self.turns_to_predict = turns_to_predict
+        super().__init__(p_id)
         
     def decide_action(self, board, depth=0, player=0, playerhands=False):
 
@@ -172,7 +180,7 @@ class SelfOnlyRecursiveAI(AI):
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
-        if len(ohand[p_id-1]) and depth < 2:
+        if len(ohand[p_id-1]) and depth < self.turns_to_predict:
             valid_moves = self.find_valid_moves(board, p_id, ohand[p_id-1])
 
         if len(valid_moves):
@@ -213,8 +221,7 @@ class SelfOnlyRecursiveAI(AI):
                 
         # No pieces left? Show score, set as finished.
         elif depth > 0:
-            self.tally_score()
-            return self.score
+            return self.get_soft_score()
 
         else:
             self.final_score()
