@@ -107,7 +107,7 @@ class RecursiveAI(AI):
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
-        if len(self.hand):
+        if len(self.hand) and depth < 9:
             valid_moves = self.find_valid_moves(board, p_id)
 
         if len(valid_moves):
@@ -136,15 +136,17 @@ class RecursiveAI(AI):
                 elif score == lowest_score:
                     best_moves.append(move)
 
-            rand_blok, rand_y, rand_x, blok_iter = choice(best_moves)
-
-            if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
-                # Remove the piece from the hand
-                self.remove_from_hand(blok_iter)
+            if not depth:
+                rand_blok, rand_y, rand_x, blok_iter = choice(best_moves)
+                print("doot")
+                if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
+                    # Remove the piece from the hand
+                    self.remove_from_hand(blok_iter)
                 
         # No pieces left? Show score, set as finished.
         elif not p_id == self.id:
-            return self.decide_action(board, depth+1, ((p_id)%4)+1, ph_copy)
+            self.tally_score()
+            return self.score
         elif depth > 0:
             self.tally_score()
             return self.score

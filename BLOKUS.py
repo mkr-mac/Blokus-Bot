@@ -7,7 +7,7 @@ def blokus():
 
     main_board = Board()
     players = []
-    players.append(AI(1))
+    players.append(RecursiveAI(1))
     players.append(AI(2))
     players.append(AI(3))
     players.append(BigFirstAI(4))
