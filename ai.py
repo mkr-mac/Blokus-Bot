@@ -56,7 +56,6 @@ class AI(Player):
         return valid_moves
 
 
-
 class BigFirstAI(AI):
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
@@ -95,7 +94,6 @@ class BigFirstAI(AI):
         self.tally_score()
 
 
-
 class RecursiveAI(AI):
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
@@ -106,7 +104,7 @@ class RecursiveAI(AI):
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
-        if len(ohand) and depth < 5:
+        if len(ohand[p_id-1]) and depth < 5:
             valid_moves = self.find_valid_moves(board, p_id, ohand[p_id-1])
 
         if len(valid_moves):
@@ -114,11 +112,7 @@ class RecursiveAI(AI):
             lowest_score = 999
             best_moves = []
 
-            mov_iter = 1
             for move in valid_moves:
-                if p_id == 1 and not depth:
-                    print(f"Evaluating move {mov_iter} of {len(valid_moves)}")
-                    mov_iter += 1
 
                 score = 0
 
@@ -168,3 +162,64 @@ class RecursiveAI(AI):
         self.tally_score()
 
 
+class SelfOnlyRecursiveAI(AI):
+        
+    def decide_action(self, board, depth=0, player=0, playerhands=False):
+
+        p_id = player if player else self.id
+        
+        ohand = playerhands if playerhands else self.hand
+
+        valid_moves = []
+        # Check for valid moves if there are still pieces in hand
+        if len(ohand[p_id-1]) and depth < 2:
+            valid_moves = self.find_valid_moves(board, p_id, ohand[p_id-1])
+
+        if len(valid_moves):
+
+            lowest_score = 999
+            best_moves = []
+            for move in valid_moves:
+                score = 0
+
+                bd_copy=deepcopy(board)
+                # whywhywhywhywhywhy
+                ph_copy=deepcopy(ohand)
+
+                r_blok, r_y, r_x, blok_iter = move
+
+                if bd_copy.set_blok(r_blok, r_y, r_x, p_id):
+                    del ph_copy[p_id-1][blok_iter]
+                
+                if depth > 0:
+                    return self.decide_action(bd_copy, depth+1, p_id, ph_copy)
+                else:
+                    score = self.decide_action(bd_copy, depth+1, p_id, ph_copy)
+
+
+                if score < lowest_score:
+                    lowest_score = score
+                    best_moves.clear()
+                    best_moves.append(move)
+                
+                elif score == lowest_score:
+                    best_moves.append(move)
+
+            if not depth:
+                rand_blok, rand_y, rand_x, blok_iter = choice(best_moves)
+                if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
+                    # Remove the piece from the hand
+                    self.remove_from_hand(blok_iter)
+                
+        # No pieces left? Show score, set as finished.
+        elif depth > 0:
+            self.tally_score()
+            return self.score
+
+        else:
+            self.final_score()
+            return
+            
+        
+        # Refresh score after turn
+        self.tally_score()

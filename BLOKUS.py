@@ -1,5 +1,5 @@
 
-from ai import AI, BigFirstAI, RecursiveAI
+from ai import AI, BigFirstAI, RecursiveAI, SelfOnlyRecursiveAI
 from board import Board
 
 
@@ -7,7 +7,7 @@ def blokus():
 
     main_board = Board()
     players = []
-    players.append(AI(1))
+    players.append(SelfOnlyRecursiveAI(1))
     players.append(AI(2))
     players.append(AI(3))
     players.append(BigFirstAI(4))
