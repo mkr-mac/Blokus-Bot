@@ -1,6 +1,7 @@
 from player import Player
 from random import choice
-from copy import copy
+from copy import copy, deepcopy
+from blok import Blok
 
 class AI(Player):
 
@@ -102,31 +103,43 @@ class RecursiveAI(AI):
             p_id = player
         else:
             p_id = self.id
-        
-        print(depth, p_id)
+            
+        if playerhands:
+            ohand = playerhands
+        else:
+            ohand = self.hand
 
         valid_moves = []
         # Check for valid moves if there are still pieces in hand
-        if len(self.hand) and depth < 9:
-            valid_moves = self.find_valid_moves(board, p_id)
+        if len(ohand) and depth < 5:
+            valid_moves = self.find_valid_moves(board, p_id, ohand[p_id-1])
 
         if len(valid_moves):
 
             lowest_score = 999
             best_moves = []
-
+            mov_iter = 1
             for move in valid_moves:
-                score = 0
-                bd_copy=copy(board)
-                ph_copy=copy(playerhands)
-                rblok, rand_y, rand_x, blok_iter = move
-                if bd_copy.set_blok(rblok, rand_y, rand_x, p_id):
-                    del ph_copy[p_id-1][blok_iter]
+                if p_id == 1 and not depth:
+                    print(f"Evaluating move {mov_iter} of {len(valid_moves)}")
+                    mov_iter += 1
 
+                score = 0
+
+                bd_copy=copy(board)
+                # whywhywhywhywhywhy
+                ph_copy=deepcopy(ohand)
+
+                r_blok, r_y, r_x, blok_iter = move
+
+                if bd_copy.set_blok(r_blok, r_y, r_x, p_id):
+                    del ph_copy[p_id-1][blok_iter]
+                
                 if depth > 0:
                     return self.decide_action(bd_copy, depth+1, ((p_id)%4)+1, ph_copy)
                 else:
                     score = self.decide_action(bd_copy, depth+1, ((p_id)%4)+1, ph_copy)
+
 
                 if score < lowest_score:
                     lowest_score = score

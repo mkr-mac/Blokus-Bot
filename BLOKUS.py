@@ -19,7 +19,6 @@ def blokus():
     while moves_left:
         moves_left = False
 
-        print(f"Turn {turn_counter}!")
         turn_counter+=1
 
         for p in players:

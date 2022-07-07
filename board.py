@@ -96,7 +96,7 @@ class Board():
     # Set a tile on the board
     def set_blok(self, blok, y, x, p_id):
         # Check if move is valid
-        if self.check_valid_move(blok, y, x, p_id):
+        if self.check_valid_move(blok, y, x, p_id) or True:
             # Set each tile with the player id
             for b_y in range(blok.size_y):
                 for b_x in range(blok.size_x):
@@ -106,5 +106,5 @@ class Board():
             return self
 
         else:
-            print(f"ERROR: Failed Placement! {y, x, p_id}")
+            print(f"ERROR: Failed Placement! {y, x, p_id, blok.arr}")
             return False
