@@ -50,3 +50,6 @@ class Blok():
 
     def get_value(self) -> int:
         return sum(map(sum, self.arr))
+
+    def get_soft_value(self) -> int:
+        return self.size_y*self.size_x

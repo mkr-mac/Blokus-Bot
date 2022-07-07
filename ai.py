@@ -72,11 +72,12 @@ class BigFirstAI(AI):
             best_moves = []
 
             for x in valid_moves:
-                if x[0].get_value() > highest_score:
-                    highest_score = x[0].get_value()
+                score = self.get_blok_value(x[0])
+                if score > highest_score:
+                    highest_score = score
                     best_moves.clear()
                     best_moves.append(x)
-                elif x[0].get_value() == highest_score:
+                elif score == highest_score:
                     best_moves.append(x)
 
             rand_blok, rand_y, rand_x, blok_iter = choice(best_moves)
@@ -92,6 +93,15 @@ class BigFirstAI(AI):
         
         # Refresh score after turn
         self.tally_score()
+    
+    def get_blok_value(self, blok):
+        return blok.get_value()
+
+
+class SoftBigFirstAI(BigFirstAI):
+
+    def get_blok_value(self, blok):
+        return blok.get_soft_value()
 
 
 class RecursiveAI(AI):
