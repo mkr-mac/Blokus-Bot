@@ -2,6 +2,7 @@ from player import Player
 from random import choice
 from copy import copy, deepcopy
 from blok import Blok
+from multiprocessing import Pool
 
 class AI(Player):
 
@@ -32,10 +33,18 @@ class AI(Player):
         p_id = override_id if override_id else self.id
 
         ohand = override_hand if override_hand else self.hand
+        
+        with Pool(len(ohand)) as p:
+            
+            p.map(self.tile_checks)
+            
+
+    def tile_checks(self, board, p_id, ohand):
 
         valid_moves = []
-        # Check each space with each tile with every orientation
         blok_iter = -1
+
+        # Check each space with each tile with every useful orientation
         for b in ohand:
             blok_iter+=1
             
@@ -94,13 +103,13 @@ class BigFirstAI(AI):
         # Refresh score after turn
         self.tally_score()
     
-    def get_blok_value(self, blok):
+    def get_blok_value(self, blok) -> int:
         return blok.get_value()
 
 
 class SoftBigFirstAI(BigFirstAI):
 
-    def get_blok_value(self, blok):
+    def get_blok_value(self, blok) -> int:
         return blok.get_soft_value()
 
 
@@ -140,79 +149,9 @@ class RecursiveAI(AI):
                     del ph_copy[p_id-1][blok_iter]
                 
                 if depth > 0:
-                    return self.decide_action(bd_copy, depth+1, ((p_id)%4)+1, ph_copy)
+                    return self.decide_action(bd_copy, depth+1, self.next_target(p_id), ph_copy)
                 else:
-                    score = self.decide_action(bd_copy, depth+1, ((p_id)%4)+1, ph_copy)
-
-
-                if score < lowest_score:
-                    lowest_score = score
-                    best_moves.clear()
-                    best_moves.append(move)
-                
-                elif score == lowest_score:
-                    best_moves.append(move)
-
-            if not depth:
-                rand_blok, rand_y, rand_x, blok_iter = choice(best_moves)
-                if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
-                    # Remove the piece from the hand
-                    self.remove_from_hand(blok_iter)
-                
-        # No pieces left? Show score, set as finished.
-        elif not p_id == self.id:
-            self.tally_score()
-            return self.score
-        elif depth > 0:
-            self.tally_score()
-            return self.score
-
-        else:
-            self.final_score()
-            return
-            
-        
-        # Refresh score after turn
-        self.tally_score()
-
-
-class SelfOnlyRecursiveAI(AI):
-
-    def __init__(self, p_id, turns_to_predict=1):
-        self.turns_to_predict = turns_to_predict
-        super().__init__(p_id)
-        
-    def decide_action(self, board, depth=0, player=0, playerhands=False):
-
-        p_id = player if player else self.id
-        
-        ohand = playerhands if playerhands else self.hand
-
-        valid_moves = []
-        # Check for valid moves if there are still pieces in hand
-        if len(ohand[p_id-1]) and depth < self.turns_to_predict:
-            valid_moves = self.find_valid_moves(board, p_id, ohand[p_id-1])
-
-        if len(valid_moves):
-
-            lowest_score = 999
-            best_moves = []
-            for move in valid_moves:
-                score = 0
-
-                bd_copy=deepcopy(board)
-                # whywhywhywhywhywhy
-                ph_copy=deepcopy(ohand)
-
-                r_blok, r_y, r_x, blok_iter = move
-
-                if bd_copy.set_blok(r_blok, r_y, r_x, p_id):
-                    del ph_copy[p_id-1][blok_iter]
-                
-                if depth > 0:
-                    return self.decide_action(bd_copy, depth+1, p_id, ph_copy)
-                else:
-                    score = self.decide_action(bd_copy, depth+1, p_id, ph_copy)
+                    score = self.decide_action(bd_copy, depth+1, self.next_target(p_id), ph_copy)
 
 
                 if score < lowest_score:
@@ -240,3 +179,12 @@ class SelfOnlyRecursiveAI(AI):
         
         # Refresh score after turn
         self.tally_score()
+
+    def next_target(self, p_id) -> int:
+        return ((p_id)%4)+1
+
+
+class SelfOnlyRecursiveAI(RecursiveAI):
+
+    def next_target(self, p_id) -> int:
+        return p_id
