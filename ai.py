@@ -6,6 +6,10 @@ from multiprocessing import Pool
 
 class AI(Player):
 
+    def __init__(self, p_id):
+        self.board = []
+        super().__init__(p_id)
+
     def decide_action(self, board, depth=0, player=0, playerhands=False):
 
         valid_moves = []
@@ -33,22 +37,27 @@ class AI(Player):
         p_id = override_id if override_id else self.id
 
         ohand = override_hand if override_hand else self.hand
-        
-        with Pool(len(ohand)) as p:
-            
-            p.map(self.tile_checks)
-            
+        self.board = board
 
-    def tile_checks(self, board, p_id, ohand):
+        with Pool(len(ohand)) as p:
+            res = p.map(self.tile_checks, ohand)
+
+        valid = []
+        for bl_num in range(len(res)):
+            for mv in res[bl_num]:
+                mv.append(bl_num)
+                valid.append(mv)
+
+        return valid
+
+    def tile_checks(self, b, override_id=0):
+
+        p_id = override_id if override_id else self.id
 
         valid_moves = []
-        blok_iter = -1
 
         # Check each space with each tile with every useful orientation
-        for b in ohand:
-            blok_iter+=1
-            
-            for flip in range(2 if b.flipable else 1):
+        for flip in range(2 if b.flipable else 1):
                 if b.flipable:
                     b.flip()
 
@@ -56,11 +65,11 @@ class AI(Player):
                     if rot:
                         b.rotate_clockwise()
 
-                    for y in range(board.size + -b.size_y + 1):
-                        for x in range(board.size + -b.size_x + 1):
+                    for y in range(self.board.size + -b.size_y + 1):
+                        for x in range(self.board.size + -b.size_x + 1):
 
-                            if (board.check_valid_move(copy(b), y, x, p_id)):
-                                valid_moves.append([copy(b), y, x, blok_iter])
+                            if (self.board.check_valid_move(copy(b), y, x, p_id)):
+                                valid_moves.append([copy(b), y, x])
 
         return valid_moves
 
