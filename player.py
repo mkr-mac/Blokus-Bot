@@ -1,8 +1,12 @@
 import standard_hand
 
 class Player():
-    def __init__(self, p_id):
-        self.id = p_id
+
+    player_id = 0
+    
+    def __init__(self):
+        Player.player_id += 1
+        self.id = Player.player_id
         self.hand = standard_hand.get_standard()
         self.has_valid_moves = True
         self.score = self.tally_score()

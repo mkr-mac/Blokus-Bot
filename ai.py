@@ -6,9 +6,9 @@ from multiprocessing import Pool
 
 class AI(Player):
 
-    def __init__(self, p_id):
+    def __init__(self):
         self.board = []
-        super().__init__(p_id)
+        super().__init__()
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
 
@@ -124,9 +124,9 @@ class SoftBigFirstAI(BigFirstAI):
 
 class RecursiveAI(AI):
     
-    def __init__(self, p_id, turns_to_predict=1):
+    def __init__(self, turns_to_predict=1):
         self.turns_to_predict = turns_to_predict
-        super().__init__(p_id)
+        super().__init__()
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
         

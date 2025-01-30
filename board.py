@@ -1,4 +1,5 @@
 from xmlrpc.client import Boolean
+from PIL import Image
 
 
 class Board():
@@ -22,8 +23,8 @@ class Board():
         if (not diagonal_check) and ((
             x==0 and y==0 and p_id==1 and blok[0][0]) or (
                 blok.size_x==self.size-x and y==0 and p_id==2 and blok[0][blok.size_x-1]) or (
-                    x==0 and blok.size_y==self.size-y and p_id==3 and blok[blok.size_y-1][0]) or (
-                        blok.size_x==self.size-x and blok.size_y==self.size-y and p_id==4 and blok[blok.size_y-1][blok.size_x-1])
+                    blok.size_x==self.size-x and blok.size_y==self.size-y and p_id==3 and blok[blok.size_y-1][blok.size_x-1]) or (
+                        x==0 and blok.size_y==self.size-y and p_id==4 and blok[blok.size_y-1][0])
             ):
             
             diagonal_check = True
@@ -108,3 +109,23 @@ class Board():
         else:
             print(f"ERROR: Failed Placement! {y, x, p_id, blok.arr}")
             return False
+        
+    def output_state(self):
+
+        img = Image.new('RGB', (self.size, self.size), (0,0,0))
+        for y in range(self.size):
+            for x in range(self.size):
+                color = (0,0,0)
+                if self.state[y][x] == 1:
+                    color = (255,0,0)
+                elif self.state[y][x] == 2:
+                    color = (0,255,0)
+                elif self.state[y][x] == 3:
+                    color = (0,0,255)
+                elif self.state[y][x] >= 4:
+                    color = (255,255,0)
+
+                img.putpixel((x,y), color)
+
+        img.save('out.png')
+        return
