@@ -59,18 +59,18 @@ class AI(Player):
 
         # Check each space with each tile with every useful orientation
         for flip in range(2 if blok.flipable else 1):
-                if blok.flipable:
-                    blok.flip()
+            if flip > 0:
+                blok.flip()
 
-                for rot in range(blok.rotations):
-                    if rot:
-                        blok.rotate_clockwise()
+            for rot in range(blok.rotations):
+                if rot:
+                    blok.rotate_clockwise()
 
-                    for y in range(board.size + -blok.size_y + 1):
-                        for x in range(board.size + -blok.size_x + 1):
+                for y in range(board.size + -blok.size_y + 1):
+                    for x in range(board.size + -blok.size_x + 1):
 
-                            if (board.check_valid_move(copy(blok), y, x, p_id)):
-                                valid_moves.append([copy(blok), y, x])
+                        if (board.check_valid_move(copy(blok), y, x, p_id)):
+                            valid_moves.append([copy(blok), y, x])
 
         return valid_moves
 
@@ -198,3 +198,9 @@ class SelfOnlyRecursiveAI(RecursiveAI):
 
     def next_target(self, p_id) -> int:
         return p_id
+
+class OpenCornersAI(AI):
+    
+    def decide_action(self, board, depth=0, player=0, playerhands=False):
+        
+        return super().decide_action(board, depth, player, playerhands)
