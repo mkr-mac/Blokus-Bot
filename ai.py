@@ -7,7 +7,6 @@ from multiprocessing import Pool
 class AI(Player):
 
     def __init__(self):
-        self.board = []
         super().__init__()
 
     def decide_action(self, board, depth=0, player=0, playerhands=False):
@@ -37,10 +36,10 @@ class AI(Player):
         p_id = override_id if override_id else self.id
 
         ohand = override_hand if override_hand else self.hand
-        self.board = board
+        ohand_board = [[x, board] for x in ohand]
 
         with Pool(len(ohand)) as p:
-            res = p.map(self.tile_checks, ohand)
+            res = p.map(self.tile_checks, ohand_board)
 
         valid = []
         for bl_num in range(len(res)):
@@ -51,25 +50,27 @@ class AI(Player):
         return valid
 
     def tile_checks(self, b, override_id=0):
+        blok = b[0]
+        board = b[1]
 
         p_id = override_id if override_id else self.id
 
         valid_moves = []
 
         # Check each space with each tile with every useful orientation
-        for flip in range(2 if b.flipable else 1):
-                if b.flipable:
-                    b.flip()
+        for flip in range(2 if blok.flipable else 1):
+                if blok.flipable:
+                    blok.flip()
 
-                for rot in range(b.rotations):
+                for rot in range(blok.rotations):
                     if rot:
-                        b.rotate_clockwise()
+                        blok.rotate_clockwise()
 
-                    for y in range(self.board.size + -b.size_y + 1):
-                        for x in range(self.board.size + -b.size_x + 1):
+                    for y in range(board.size + -blok.size_y + 1):
+                        for x in range(board.size + -blok.size_x + 1):
 
-                            if (self.board.check_valid_move(copy(b), y, x, p_id)):
-                                valid_moves.append([copy(b), y, x])
+                            if (board.check_valid_move(copy(blok), y, x, p_id)):
+                                valid_moves.append([copy(blok), y, x])
 
         return valid_moves
 

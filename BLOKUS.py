@@ -7,10 +7,10 @@ def blokus():
 
     main_board = Board()
     players = []
+    players.append(AI())
     players.append(SelfOnlyRecursiveAI(1))
     players.append(SoftBigFirstAI())
-    players.append(SoftBigFirstAI())
-    players.append(SoftBigFirstAI())
+    players.append(BigFirstAI())
 
     moves_left = True
 
@@ -29,6 +29,10 @@ def blokus():
                     phands.append(h.hand)
                 p.decide_action(main_board, playerhands=phands)
                 moves_left = True
+
+    print("Final Scores:")
+    for player in players:
+        print(f"Player {player.id}: {player.score}")
 
     print("Final Board:")
     for l in main_board:
