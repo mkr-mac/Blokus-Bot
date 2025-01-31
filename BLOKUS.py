@@ -9,7 +9,7 @@ def blokus():
     players = []
     players.append(SoftBigFirstAI())
     players.append(AI())
-    players.append(SelfOnlyRecursiveAI(1))
+    players.append(RecursiveAI(5))
     players.append(BigFirstAI())
 
     moves_left = True

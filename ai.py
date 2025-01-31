@@ -20,7 +20,7 @@ class AI(Player):
         # Pick a random move if there is at least one valid move
         if len(valid_moves):
             rand_blok, rand_y, rand_x, blok_iter = choice(valid_moves)
-            if board.set_blok(rand_blok, rand_y, rand_x, self.id):  
+            if board.set_blok(rand_blok, rand_y, rand_x, self.id):
                 # Remove the piece from the hand
                 self.remove_from_hand(blok_iter)
                 
@@ -37,7 +37,7 @@ class AI(Player):
         p_id = override_id if override_id else self.id
 
         ohand = override_hand if override_hand else self.hand
-        ohand_board = [[x, board] for x in ohand]
+        ohand_board = [[x, board, p_id] for x in ohand]
 
         with Pool(len(ohand)) as p:
             res = p.map(self.tile_checks, ohand_board)
@@ -53,8 +53,7 @@ class AI(Player):
     def tile_checks(self, b, override_id=0):
         blok = b[0]
         board = b[1]
-
-        p_id = override_id if override_id else self.id
+        p_id = b[2]
 
         valid_moves = []
         # Check each space with each tile with every useful orientation
