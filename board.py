@@ -1,11 +1,12 @@
 from xmlrpc.client import Boolean
 from PIL import Image
+import numpy as np
 
 
 class Board():
     def __init__(self, size=20):
         self.size = size
-        self.state = [[0 for x in range(self.size)] for y in range(self.size)]
+        self.state = np.zeros((size,size))
 
     # Lets Board act like a list
     def __getitem__(self, item):
@@ -22,20 +23,20 @@ class Board():
         # It is the only valid place for the first piece
         if (not diagonal_check) and ((
             x==0 and y==0 and p_id==1 and blok[0][0]) or (
-                blok.size_x==self.size-x and y==0 and p_id==2 and blok[0][blok.size_x-1]) or (
-                    blok.size_x==self.size-x and blok.size_y==self.size-y and p_id==3 and blok[blok.size_y-1][blok.size_x-1]) or (
-                        x==0 and blok.size_y==self.size-y and p_id==4 and blok[blok.size_y-1][0])
+                blok.get_size_x()==self.size-x and y==0 and p_id==2 and blok[0][blok.get_size_x()-1]) or (
+                    blok.get_size_x()==self.size-x and blok.get_size_y()==self.size-y and p_id==3 and blok[blok.get_size_y()-1][blok.get_size_x()-1]) or (
+                        x==0 and blok.get_size_y()==self.size-y and p_id==4 and blok[blok.get_size_y()-1][0])
             ):
             
             diagonal_check = True
 
 
         # Check if it fits
-        if (x + blok.size_x > self.size) or (y + blok.size_y > self.size):
+        if (x + blok.get_size_x() > self.size) or (y + blok.get_size_y() > self.size):
             return False
 
-        for b_y in range(blok.size_y):
-            for b_x in range(blok.size_x):
+        for b_y in range(blok.get_size_y()):
+            for b_x in range(blok.get_size_x()):
                 # Check if this is an actual bit of the blok
                 if not blok[b_y][b_x]:
                     pass
@@ -99,8 +100,8 @@ class Board():
         # Check if move is valid
         if self.check_valid_move(blok, y, x, p_id):
             # Set each tile with the player id
-            for b_y in range(blok.size_y):
-                for b_x in range(blok.size_x):
+            for b_y in range(blok.get_size_y()):
+                for b_x in range(blok.get_size_x()):
                     if blok[b_y][b_x]:
                         self.state[y+b_y][x+b_x] = p_id
             

@@ -5,11 +5,11 @@ from board import Board
 
 def blokus():
 
-    main_board = Board()
+    main_board = Board(size=20)
     players = []
+    players.append(SoftBigFirstAI())
     players.append(AI())
     players.append(SelfOnlyRecursiveAI(1))
-    players.append(SoftBigFirstAI())
     players.append(BigFirstAI())
 
     moves_left = True

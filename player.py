@@ -24,7 +24,7 @@ class Player():
     def get_soft_score(self):
         score = 0
         for p in self.hand:
-            score += p.size_x*p.size_y
+            score += p.get_soft_value()
 
         return score
 

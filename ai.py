@@ -3,6 +3,7 @@ from random import choice
 from copy import copy, deepcopy
 from blok import Blok
 from multiprocessing import Pool
+import numpy as np
 
 class AI(Player):
 
@@ -56,7 +57,6 @@ class AI(Player):
         p_id = override_id if override_id else self.id
 
         valid_moves = []
-
         # Check each space with each tile with every useful orientation
         for flip in range(2 if blok.flipable else 1):
             if flip > 0:
@@ -66,8 +66,8 @@ class AI(Player):
                 if rot:
                     blok.rotate_clockwise()
 
-                for y in range(board.size + -blok.size_y + 1):
-                    for x in range(board.size + -blok.size_x + 1):
+                for y in range(board.size + -blok.get_size_y() + 1):
+                    for x in range(board.size + -blok.get_size_x() + 1):
 
                         if (board.check_valid_move(copy(blok), y, x, p_id)):
                             valid_moves.append([copy(blok), y, x])
@@ -84,7 +84,7 @@ class BigFirstAI(AI):
         if len(self.hand):
             valid_moves = self.find_valid_moves(board)
 
-        # Pick one of the biggest pieces
+        # Pick one of the biggest pieces                
         if len(valid_moves):
 
             highest_score = 0
@@ -180,7 +180,11 @@ class RecursiveAI(AI):
                 
         # No pieces left? Show score, set as finished.
         elif depth > 0:
-            return self.get_soft_score()
+            score = 0
+            for blok in ohand[self.id-1]:
+                score += blok.get_value()
+            
+            return score
 
         else:
             self.final_score()
@@ -191,7 +195,7 @@ class RecursiveAI(AI):
         self.tally_score()
 
     def next_target(self, p_id) -> int:
-        return ((p_id)%4)+1
+        return ((p_id%4)+1)
 
 
 class SelfOnlyRecursiveAI(RecursiveAI):
