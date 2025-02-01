@@ -3,7 +3,6 @@ from random import choice
 from copy import copy, deepcopy
 from blok import Blok
 from multiprocessing import Pool
-import numpy as np
 
 class AI(Player):
 
@@ -51,9 +50,9 @@ class AI(Player):
         return valid
 
     def tile_checks(self, b, override_id=0):
-        blok = b[0]
+        blok  = b[0]
         board = b[1]
-        p_id = b[2]
+        p_id  = b[2]
 
         valid_moves = []
         # Check each space with each tile with every useful orientation

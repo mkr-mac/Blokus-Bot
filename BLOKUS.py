@@ -7,9 +7,9 @@ def blokus():
 
     main_board = Board(size=20)
     players = []
-    players.append(SoftBigFirstAI())
+    players.append(BigFirstAI())
     players.append(AI())
-    players.append(RecursiveAI(5))
+    players.append(BigFirstAI())
     players.append(BigFirstAI())
 
     moves_left = True

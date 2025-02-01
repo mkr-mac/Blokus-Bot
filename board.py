@@ -1,12 +1,11 @@
 from xmlrpc.client import Boolean
 from PIL import Image
-import numpy as np
 
 
 class Board():
     def __init__(self, size=20):
         self.size = size
-        self.state = np.zeros((size,size))
+        self.state = [[0 for x in range(self.size)] for y in range(self.size)]
 
     # Lets Board act like a list
     def __getitem__(self, item):

@@ -1,8 +1,6 @@
-import numpy as np
-
 class Blok():
     def __init__(self, arr, flipable = True, rotations = 4):
-        self.arr = np.array(arr)
+        self.arr = arr
         self.flipable = flipable
         self.rotations = rotations
 
@@ -12,27 +10,27 @@ class Blok():
 
     # Rotates the tile clockwise
     def rotate_clockwise(self):
-        self.arr = np.rot90(self.arr, 0)
+        self.arr = [[self.arr[j][i] for j in range(len(self.arr))] for i in range(len(self.arr[0]))][::-1]
                 
     # Rotates the tile counterclockwise
     def rotate_counterclockwise(self):
-        self.arr = np.rot90(self.arr, 1)
+        self.arr = self.arr
         
     # Flips the tile over
     def flip(self):
-        self.arr = np.flip(self.arr,0)
+        self.arr = self.arr[::-1]
 
     def get_piece(self) -> list:
         return self.arr
     
     def get_size_y(self) -> int:
-        return np.size(self.arr,0)
+        return len(self.arr)
     
     def get_size_x(self) -> int:
-        return np.size(self.arr,1)
+        return len(self.arr[0])
 
     def get_value(self) -> int:
-        return np.sum(self.arr)
+        return sum(map(sum, self.arr))
 
     def get_soft_value(self) -> int:
-        return np.size(self.arr)
+        return self.get_size_x() * self.get_size_y()
