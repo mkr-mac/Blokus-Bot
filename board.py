@@ -38,7 +38,7 @@ class Board():
             for b_x in range(blok.get_size_x()):
                 # Check if this is an actual bit of the blok
                 if not blok[b_y][b_x]:
-                    pass
+                    continue
                 # Check if spot is taken
                 elif self.state[y+b_y][x+b_x]:
                     return False
